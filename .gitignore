@@ -1,0 +1,21 @@
+# Arduino temporary files
+*.o
+*.d
+*.a
+*.s
+*.hex
+*.elf
+*.bin
+*.eep
+*.map
+*.lss
+*.sym
+
+# Build folder
+build/
+
+# IDE-specific files
+.vscode/
+.cproject
+.project
+.idea/
