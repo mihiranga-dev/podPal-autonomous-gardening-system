@@ -76,36 +76,35 @@ The hardware was engineered for stability and robustness, centered around key pr
 
 ```mermaid
 graph TD
-    subgraph PowerSystem["Power System"]
-        A[12V DC Adapter] --> B[LM2596 Buck Converter];
-        B --> C[5V Servo Power Rail];
-        A --> D[12V Rail for Fan/Light];
+    subgraph Power
+        Power_12V["12V DC Adapter"]
     end
 
-    subgraph Microcontrollers
-        E[ESP8266] -- "Serial Bridge (TX/RX)" --> F[Arduino Due];
-    end
-
-    subgraph Drivers
-        F -- "Pin 12 (Signal)" --> G["Pump 1 Driver (BC547+MOSFET)"];
-        F -- "Pin 8 (Signal)" --> H["Fan Driver (BC547+MOSFET)"];
+    subgraph Control
+        ESP["ESP8266 (Communicator)"]
+        Arduino["Arduino Due (Workhorse)"]
     end
 
     subgraph Actuators
-        I[Pump 1]
-        J[Fan]
-        K[Servos]
+        Pumps["Pumps / Fan"]
+        Servos["Servos"]
     end
 
-    D -- "12V Power" --> H;
-    F -- "5V from Arduino" --> G; %% Or wherever the pump driver gets power
-    G -- "Switched Power" --> I;
-    H -- "Switched Power" --> J;
-    C -- "5V Power" --> K;
+    subgraph Drivers
+        Buck["LM2596 Buck Converter"]
+        MOSFET["MOSFET Driver Circuits"]
+    end
 
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style E fill:#9cf,stroke:#333,stroke-width:2px
-    style F fill:#9cf,stroke:#333,stroke-width:2px
+    Power_12V --> Buck
+    Power_12V --> MOSFET
+
+    Buck -- "Clean 5V" --> Servos
+    MOSFET -- "Switched Power" --> Pumps
+
+    ESP -- "Serial Bridge" --> Arduino
+
+    Arduino -- "Signal" --> MOSFET
+    Arduino -- "Signal" --> Servos
 ```
 
 ---
